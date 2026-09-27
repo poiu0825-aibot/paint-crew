@@ -11,7 +11,7 @@ const app=express(),http=createServer(app),io=new Server(http,{maxHttpBufferSize
 const rooms=new Map(),timers=new Map();
 app.disable('x-powered-by');
 app.use((req,res,next)=>{res.setHeader('X-Content-Type-Options','nosniff');res.setHeader('Referrer-Policy','same-origin');res.setHeader('X-Frame-Options','DENY');next();});
-app.get('/api/health',(_,res)=>res.json({ok:true,game:'paint-crew',version:'1.0.0'}));
+app.get('/api/health',(_,res)=>res.json({ok:true,game:'paint-crew',version:'1.1.0'}));
 app.use(express.static(path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../dist')));
 app.get('/',(_,res)=>res.sendFile(path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../dist/index.html')));
 function publicRoom(room){return {code:room.code,host:room.host,status:room.status,match:room.match,players:room.players.map(({token,...p})=>p),chat:room.chat,votes:room.votes,game:room.game?{...room.game,players:room.game.players.map(({token,deck,...p})=>({...p,remaining:deck.length,nextColor:deck[0]})),legal:room.game.phase==='paint'?legalPlacements(room.game):[],scores:scores(room.game)}:null};}
